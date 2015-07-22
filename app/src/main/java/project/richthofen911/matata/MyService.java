@@ -98,7 +98,6 @@ public class MyService extends Service {
             StringBuffer output = new StringBuffer();
             while ((read = reader.read(buffer)) > 0) {
                 output.append(buffer, 0, read);
-                //textView.append(output);
             }
             reader.close();
             process.waitFor();
@@ -142,7 +141,7 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mSocket.emit("new message", "device " + myConnectionId + " is offline");
+        mSocket.emit("new message", "device " + myConnectionId + " is offline****");
         mSocket.disconnect();
         mSocket.off();
     }
